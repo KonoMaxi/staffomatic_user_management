@@ -60,6 +60,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     bcrypt (3.1.16)
     bootsnap (1.7.0)
       msgpack (~> 1.0)
@@ -74,6 +76,8 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.8.8)
       concurrent-ruby (~> 1.0)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     jsonapi-serializer (2.1.0)
       activesupport (>= 4.2)
     jsonapi.rb (1.6.0)
@@ -92,7 +96,9 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (1.0.0)
-    mimemagic (0.3.5)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
     minitest (5.14.3)
@@ -102,6 +108,7 @@ GEM
     nokogiri (1.11.1)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
+    public_suffix (5.0.0)
     puma (5.2.0)
       nio4r (~> 2.0)
     racc (1.5.2)
@@ -159,6 +166,15 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
+    rswag-api (2.6.0)
+      railties (>= 3.1, < 7.1)
+    rswag-specs (2.6.0)
+      activesupport (>= 3.1, < 7.1)
+      json-schema (~> 2.2)
+      railties (>= 3.1, < 7.1)
+    rswag-ui (2.6.0)
+      actionpack (>= 3.1, < 7.1)
+      railties (>= 3.1, < 7.1)
     spring (2.1.1)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -189,6 +205,9 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 6.1.1)
   rspec-rails (~> 4.0.2)
+  rswag-api
+  rswag-specs
+  rswag-ui
   spring
   tzinfo-data
 
