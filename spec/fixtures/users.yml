@@ -1,0 +1,7 @@
+one:
+  email: danni@example.com
+  password_digest: <%= password_one_digest %>
+
+two:
+  email: max@konow.ski
+  password_digest: <%= password_two_digest %>

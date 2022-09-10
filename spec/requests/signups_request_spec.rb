@@ -1,14 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe "Signups", type: :request do
+  fixtures :users
+
   describe "POST /create" do
     fit "returns http success" do
       user_data = {
         data: {
           attributes: {
-            email: 'danni@example.com',
-            password: 'supersecurepassword',
-            password_confirmation: 'supersecurepassword'
+            email: 'johnny@example.com',
+            password: password_one,
+            password_confirmation: password_one
           }
         }
       }
@@ -22,9 +24,9 @@ RSpec.describe "Signups", type: :request do
       user_data = {
         data: {
           attributes: {
-            email: 'danni@example.com',
-            password: 'supersecurepassword',
-            password_confirmation: 'supersecurepassword!'
+            email: 'johnny@example.com',
+            password: password_one,
+            password_confirmation: password_two
           }
         }
       }
