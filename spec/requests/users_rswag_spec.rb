@@ -5,7 +5,17 @@ RSpec.describe 'users', type: :request do
 
   path '/users' do
     get('list users') do
-      parameter name: :status, in: :query, type: :boolean, default: true
+      parameter name: :filter, in: :query, schema: {
+        type: :object,
+        properties: {
+          filter: {
+            type: :object,
+            properties: {
+              archived: { type: :boolean }
+            }
+          }
+        }
+      }
       produces 'application/vnd.api+json'
       security [Bearer: []]
 
@@ -22,7 +32,7 @@ RSpec.describe 'users', type: :request do
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
         
         describe 'allows filtering only archived users' do
-          let (:status) { true }
+          let (:filter) { { filter: { archived: true } } }
           run_test! do |response|
             data = JSON.parse(response.body)
             expect(data.dig("data").length).to eq(1)
@@ -30,7 +40,7 @@ RSpec.describe 'users', type: :request do
         end
 
         describe 'allows filtering only unarchived users' do
-          let (:status) { false }
+          let (:filter) { { filter: { archived: false } } }
           run_test! do |response|
             data = JSON.parse(response.body)
             expect(data.dig("data").length).to eq(2)
@@ -38,7 +48,7 @@ RSpec.describe 'users', type: :request do
         end
 
         describe 'without filtering' do
-          let (:status) { nil }
+          let (:filter) { {} }
           run_test! do |response|
             data = JSON.parse(response.body)
             expect(data.dig("data").length).to eq(3)
