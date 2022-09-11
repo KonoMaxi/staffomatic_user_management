@@ -1,7 +1,14 @@
 one:
   email: danni@example.com
+  archived: false
   password_digest: <%= password_one_digest %>
 
 two:
   email: max@konow.ski
+  archived: false
+  password_digest: <%= password_two_digest %>
+
+three:
+  email: archivald@archived.com
+  archived: true
   password_digest: <%= password_two_digest %>

@@ -48,12 +48,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                required:
-                - error
+                "$ref": "#/components/schemas/basic_error"
   "/signup":
     post:
       summary: create signup
@@ -106,13 +101,19 @@ paths:
   "/users":
     get:
       summary: list users
+      parameters:
+      - name: status
+        in: query
+        default: true
+        schema:
+          type: boolean
       security:
       - Bearer: []
       responses:
         '200':
           description: successful
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 type: object
                 properties:
@@ -123,9 +124,117 @@ paths:
         '401':
           description: unauthorized
           content:
-            application/json:
+            application/vnd.api+json:
               schema:
                 "$ref": "#/components/schemas/login_prompt"
+  "/users/{id}":
+    delete:
+      summary: destroy user
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                      id:
+                        type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/login_prompt"
+        '403':
+          description: Forbidden Self-Deletion
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/basic_error"
+        '404':
+          description: User Not Found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/user"
+  "/users/{id}/archive":
+    patch:
+      summary: update users archive-status
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                      id:
+                        type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/login_prompt"
+        '403':
+          description: Forbidden Self-Archiving
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/basic_error"
+        '404':
+          description: User Not Found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/user"
+        '422':
+          description: Already archived
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/basic_error"
 servers:
 - url: http://{defaultHost}
   variables:
@@ -139,6 +248,13 @@ components:
       description: Bearer token
       in: header
   schemas:
+    basic_error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
     jsonapi_error:
       type: object
       properties:

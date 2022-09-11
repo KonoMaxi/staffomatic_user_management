@@ -38,11 +38,7 @@ RSpec.describe 'authentications', type: :request do
       end
 
       response('422', 'invalid request') do
-        schema type: :object,
-          properties: {
-            error: { type: :string }
-          },
-          required: [ 'error' ]
+        schema '$ref' => '#/components/schemas/basic_error'
 
         let(:credentials) {{
           authentication: {

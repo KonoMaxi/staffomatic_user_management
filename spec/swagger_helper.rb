@@ -42,6 +42,15 @@ RSpec.configure do |config|
           }
         },
         schemas: {
+          basic_error: {
+            type: :object,
+            properties: {
+              error: {
+                type: :string,
+              }
+            },
+            required: [ 'error' ]
+          },
           jsonapi_error: {
             type: :object,
             properties: {
