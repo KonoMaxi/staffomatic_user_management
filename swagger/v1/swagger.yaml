@@ -64,7 +64,9 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/user"
+                type: object
+                data:
+                  "$ref": "#/components/schemas/user"
         '422':
           description: unprocessable
           content:
@@ -166,7 +168,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         type:
           type: string
           enum:

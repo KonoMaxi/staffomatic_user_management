@@ -30,7 +30,8 @@ RSpec.describe 'signups', type: :request do
         }
       }
       response(201, 'created') do
-        schema '$ref' => '#/components/schemas/user'
+        schema type: :object,
+          data: { '$ref' => '#/components/schemas/user' }
 
         let(:user_data) { {
           data: {

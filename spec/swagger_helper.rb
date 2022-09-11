@@ -70,7 +70,7 @@ RSpec.configure do |config|
           user: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string },
               type: { type: :string, enum: [ 'user' ] },
               attributes: {
                 type: :object,
