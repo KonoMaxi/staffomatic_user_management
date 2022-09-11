@@ -16,4 +16,8 @@ module PasswordHelper
   def password_two
     "supersecurepassword"
   end
+
+  def generate_token user
+    return JwtAuthenticationService.encode_token({ user_id: user.id })
+  end
 end

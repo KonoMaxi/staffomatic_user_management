@@ -24,14 +24,72 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: 'http://{defaultHost}',
           variables: {
             defaultHost: {
-              default: 'www.example.com'
+              default: '127.0.0.1:3189'
             }
           }
         }
-      ]
+      ],
+      components: {
+        securitySchemes: {
+          Bearer: {
+            type: :apiKey,
+            name: 'Authentication',
+            description: 'Bearer token',
+            in: :header
+          }
+        },
+        schemas: {
+          jsonapi_error: {
+            type: :object,
+            properties: {
+              errors: {
+                type: :array,
+                items: {
+                  type: :object,
+                  properties: {
+                    status: { type: :string },
+                    source: {
+                      type: :object,
+                      properties: {
+                        pointer: { type: :string }
+                      }
+                    },
+                    title: { type: :string },
+                    detail: { type: :string },
+                    code: { type: :string }
+                  },
+                  required: [ 'status' ]
+                }
+              }
+            },
+            required: [ 'errors' ]
+          },
+          user: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              type: { type: :string, enum: [ 'user' ] },
+              attributes: {
+                type: :object,
+                properties: {
+                  email: { type: :string },
+                },
+                required: [ "email" ]
+              }
+            },
+            required: [ "attributes" ]
+          },
+          login_prompt: {
+            type: :object,
+            properties: {
+              message: { type: :string, enum: [ "Please log in" ] }
+            }
+          }
+        }
+      }
     }
   }
 
