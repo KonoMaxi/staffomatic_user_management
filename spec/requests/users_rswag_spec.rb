@@ -59,6 +59,7 @@ RSpec.describe 'users', type: :request do
       response(401, 'unauthorized') do
         schema '$ref' => '#/components/schemas/login_prompt'
         let ('Authentication') { 'Bearer super_invalid_token' }
+        let (:filter) { {} }
 
         run_test!
       end
