@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
 
-  resource :signup, only: %i[create]
-  resources :authentications, only: %i[create]
-  resources :users, only: %i[index, destroy]
+  resource :signup, only: [ :create ]
+  resources :authentications, only: [ :create ]
+  resources :users, only: [ :index, :destroy ]
 end
