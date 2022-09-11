@@ -204,6 +204,7 @@ DEPENDENCIES
   mysql2 (~> 0.5)
   puma (~> 5.0)
   rails (~> 6.1.1)
+  ransack
   rspec-rails (~> 4.0.2)
   rswag-api
   rswag-specs

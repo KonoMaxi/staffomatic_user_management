@@ -11,7 +11,7 @@ RSpec.describe 'users', type: :request do
           filter: {
             type: :object,
             properties: {
-              archived: { type: :boolean }
+              archived_eq: { type: :boolean }
             }
           }
         }
@@ -32,7 +32,7 @@ RSpec.describe 'users', type: :request do
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
         
         describe 'allows filtering only archived users' do
-          let (:filter) { { filter: { archived: true } } }
+          let (:filter) { { filter: { archived_eq: true } } }
           run_test! do |response|
             data = JSON.parse(response.body)
             expect(data.dig("data").length).to eq(1)
@@ -40,7 +40,7 @@ RSpec.describe 'users', type: :request do
         end
 
         describe 'allows filtering only unarchived users' do
-          let (:filter) { { filter: { archived: false } } }
+          let (:filter) { { filter: { archived_eq: false } } }
           run_test! do |response|
             data = JSON.parse(response.body)
             expect(data.dig("data").length).to eq(2)
@@ -171,6 +171,7 @@ RSpec.describe 'users', type: :request do
             }
           }
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
+        let ('id') { -1 }
         run_test!
       end
 

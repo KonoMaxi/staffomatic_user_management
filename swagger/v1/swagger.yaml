@@ -102,11 +102,16 @@ paths:
     get:
       summary: list users
       parameters:
-      - name: status
+      - name: filter
         in: query
-        default: true
         schema:
-          type: boolean
+          type: object
+          properties:
+            filter:
+              type: object
+              properties:
+                archived_eq:
+                  type: boolean
       security:
       - Bearer: []
       responses:

@@ -21,6 +21,7 @@ gem 'jwt'
 
 # seriaization & json_api logic
 gem 'jsonapi.rb'
+gem 'ransack' # filtering & sorting
 
 gem 'rswag-api'
 gem 'rswag-ui'
