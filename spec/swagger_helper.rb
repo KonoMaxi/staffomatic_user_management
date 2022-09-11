@@ -69,8 +69,7 @@ RSpec.configure do |config|
                     title: { type: :string },
                     detail: { type: :string },
                     code: { type: :string }
-                  },
-                  required: [ 'status' ]
+                  }
                 }
               }
             },

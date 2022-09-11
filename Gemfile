@@ -19,9 +19,14 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # implement auth with JWT
 gem 'jwt'
 
+# implement authorization
+gem 'pundit'
+
 # seriaization & json_api logic
 gem 'jsonapi.rb'
-gem 'ransack' # filtering & sorting
+
+# filtering & sorting
+gem 'ransack'
 
 gem 'rswag-api'
 gem 'rswag-ui'

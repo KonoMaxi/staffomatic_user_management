@@ -79,7 +79,7 @@ RSpec.describe 'users', type: :request do
               type: :object,
               properties: {
                 type: { type: :string, enum: [ 'user' ] },
-                id: { type: :integer }
+                id: { type: :string }
               }
             }
           }
@@ -98,7 +98,7 @@ RSpec.describe 'users', type: :request do
       end
 
       response(403, 'Forbidden Self-Deletion') do
-        schema '$ref' => '#/components/schemas/basic_error'
+        schema '$ref' => '#/components/schemas/jsonapi_error'
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
         let ('id') { users(:one).id }
 
@@ -116,6 +116,8 @@ RSpec.describe 'users', type: :request do
             }  
           }
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
+        let ('id') { -1 }
+
         run_test!
       end
     end
@@ -134,7 +136,7 @@ RSpec.describe 'users', type: :request do
               type: :object,
               properties: {
                 type: { type: :string, enum: [ 'user' ] },
-                id: { type: :integer }
+                id: { type: :string }
               }
             }  
           }
