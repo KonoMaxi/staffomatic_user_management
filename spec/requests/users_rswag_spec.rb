@@ -86,14 +86,33 @@ RSpec.describe 'users', type: :request do
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
         let ('id') { users(:two).id }
 
-        before do |example|
-          expect(Audited::Audit.count).to equal(0)
-          submit_request(example.metadata)
+        describe 'with audit' do
+          before do |example|
+            expect(Audited::Audit.count).to equal(0)
+            submit_request(example.metadata)
+          end
+        
+          it 'destroys the user' do |example|
+            assert_response_matches_metadata(example.metadata)
+            expect(Audited::Audit.count).to equal(1)
+          end  
         end
-      
-        it 'destroys the user with audit' do |example|
-          assert_response_matches_metadata(example.metadata)
-          expect(Audited::Audit.count).to equal(1)
+
+        describe 'with email_job' do
+          before do |example|
+            ActiveJob::Base.queue_adapter = :test
+            submit_request(example.metadata)
+          end
+        
+          it 'destroys the user' do |example|
+            assert_response_matches_metadata(example.metadata)
+            expect(enqueued_jobs.size).to eq(1)
+            expect {
+              perform_enqueued_jobs
+            }.to change {
+              ActionMailer::Base.deliveries.count
+            }.by(1)
+          end  
         end
       end
 
@@ -156,6 +175,16 @@ RSpec.describe 'users', type: :request do
       produces 'application/vnd.api+json'
       security [Bearer: []]
       
+      # expect {
+      #   puts ActionMailer::Base.deliveries.count
+      #   perform_enqueued_jobs do
+      #     UserChangeHandlerJob.perform_later @user.email, @audit.id
+      #   end
+      #   puts ActionMailer::Base.deliveries.count
+      # }.to change {
+      #   ActionMailer::Base.deliveries.count
+      # }.by(1)
+  
       response(200, 'successful') do
         schema type: :object,
           data: { '$ref' => '#/components/schemas/user' }
@@ -171,14 +200,33 @@ RSpec.describe 'users', type: :request do
           }
         } }
   
-        before do |example|
-          expect(users(:one).audits.count).to equal(0)
-          submit_request(example.metadata)
+        describe 'with audit' do
+          before do |example|
+            expect(users(:one).audits.count).to equal(0)
+            submit_request(example.metadata)
+          end
+        
+          it 'archives the user' do |example|
+            assert_response_matches_metadata(example.metadata)
+            expect(users(:one).audits.count).to equal(1)
+          end
         end
-      
-        it 'archives the user with audit' do |example|
-          assert_response_matches_metadata(example.metadata)
-          expect(users(:one).audits.count).to equal(1)
+
+        describe 'with email_job' do
+          before do |example|
+            ActiveJob::Base.queue_adapter = :test
+            submit_request(example.metadata)
+          end
+        
+          it 'archives the user' do |example|
+            assert_response_matches_metadata(example.metadata)
+            expect(enqueued_jobs.size).to eq(1)
+            expect {
+              perform_enqueued_jobs
+            }.to change {
+              ActionMailer::Base.deliveries.count
+            }.by(1)
+          end  
         end
       end
    
