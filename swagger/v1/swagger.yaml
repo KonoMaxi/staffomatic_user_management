@@ -159,7 +159,7 @@ paths:
                         enum:
                         - user
                       id:
-                        type: integer
+                        type: string
         '401':
           description: Unauthorized
           content:
@@ -171,7 +171,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/components/schemas/basic_error"
+                "$ref": "#/components/schemas/jsonapi_error"
         '404':
           description: User Not Found
           content:
@@ -201,16 +201,8 @@ paths:
             application/vnd.api+json:
               schema:
                 type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                        - user
-                      id:
-                        type: integer
+                data:
+                  "$ref": "#/components/schemas/user"
         '401':
           description: Unauthorized
           content:
@@ -222,24 +214,37 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/components/schemas/basic_error"
+                "$ref": "#/components/schemas/jsonapi_error"
         '404':
           description: User Not Found
           content:
             application/vnd.api+json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      "$ref": "#/components/schemas/user"
+                "$ref": "#/components/schemas/jsonapi_error"
         '422':
           description: Already archived
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/components/schemas/basic_error"
+                "$ref": "#/components/schemas/jsonapi_error"
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        archived:
+                          type: boolean
 servers:
 - url: http://{defaultHost}
   variables:
@@ -270,19 +275,22 @@ components:
             properties:
               status:
                 type: string
+                nullable: true
               source:
                 type: object
+                nullable: true
                 properties:
                   pointer:
                     type: string
               title:
                 type: string
+                nullable: true
               detail:
                 type: string
+                nullable: true
               code:
                 type: string
-            required:
-            - status
+                nullable: true
       required:
       - errors
     user:

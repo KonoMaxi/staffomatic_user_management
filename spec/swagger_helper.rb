@@ -59,16 +59,17 @@ RSpec.configure do |config|
                 items: {
                   type: :object,
                   properties: {
-                    status: { type: :string },
+                    status: { type: :string, nullable: true },
                     source: {
                       type: :object,
+                      nullable: true,
                       properties: {
                         pointer: { type: :string }
                       }
                     },
-                    title: { type: :string },
-                    detail: { type: :string },
-                    code: { type: :string }
+                    title: { type: :string, nullable: true },
+                    detail: { type: :string, nullable: true },
+                    code: { type: :string, nullable: true }
                   }
                 }
               }

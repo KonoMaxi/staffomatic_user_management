@@ -4,5 +4,7 @@ Rails.application.routes.draw do
 
   resource :signup, only: [ :create ]
   resources :authentications, only: [ :create ]
-  resources :users, only: [ :index, :destroy ]
+  resources :users, only: [ :index, :destroy ] do
+    patch :archive, on: :member
+  end
 end

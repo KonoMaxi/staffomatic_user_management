@@ -13,4 +13,8 @@ class UserPolicy
   def destroy?
     user !=  record
   end
+
+  def archive?
+    destroy?
+  end
 end
