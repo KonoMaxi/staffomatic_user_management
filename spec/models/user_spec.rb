@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  fixtures :users
+
   subject do
     described_class.new(
       email: 'daniel@example.com',
@@ -15,6 +17,12 @@ RSpec.describe User, type: :model do
 
   it 'is not valid without email' do
     subject.email = nil
+    expect(subject).to_not be_valid
+  end
+
+
+  it 'has valid email' do
+    subject.email = "invalid_email_address"
     expect(subject).to_not be_valid
   end
 
