@@ -15,6 +15,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'support/request_spec_helper'
 require "support/password_helper"
+require 'webmock/rspec'
 
 RSpec.configure do |config|
   config.include RequestSpecHelper

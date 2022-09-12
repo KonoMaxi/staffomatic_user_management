@@ -19,7 +19,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    UserModifiedMailer.send_notification(@user.email, @user.audits.last.id).deliver_later if @user.destroy
+    if @user.destroy
+      UserModifiedMailer.send_notification(@user.email, @user.audits.last.id).deliver_later
+      UserChangedWebhookJob.perform_later
+    end
+
     render jsonapi: @user
   end
 
@@ -28,6 +32,7 @@ class UsersController < ApplicationController
       if @user.saved_change_to_archived?
         render jsonapi: @user
         UserModifiedMailer.send_notification(@user.email, @user.audits.last.id).deliver_later
+        UserChangedWebhookJob.perform_later
       else
         render json: { errors: [{ status: "422", title: "Unprocessable Change", error: "You cannot archive an archived user" }] }, status: :unprocessable_entity 
       end

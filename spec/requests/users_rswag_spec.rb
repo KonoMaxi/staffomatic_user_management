@@ -97,23 +97,6 @@ RSpec.describe 'users', type: :request do
             expect(Audited::Audit.count).to equal(1)
           end  
         end
-
-        describe 'with email_job' do
-          before do |example|
-            ActiveJob::Base.queue_adapter = :test
-            submit_request(example.metadata)
-          end
-        
-          it 'destroys the user' do |example|
-            assert_response_matches_metadata(example.metadata)
-            expect(enqueued_jobs.size).to eq(1)
-            expect {
-              perform_enqueued_jobs
-            }.to change {
-              ActionMailer::Base.deliveries.count
-            }.by(1)
-          end  
-        end
       end
 
       response(401, 'Unauthorized') do
@@ -174,16 +157,6 @@ RSpec.describe 'users', type: :request do
       consumes 'application/vnd.api+json'
       produces 'application/vnd.api+json'
       security [Bearer: []]
-      
-      # expect {
-      #   puts ActionMailer::Base.deliveries.count
-      #   perform_enqueued_jobs do
-      #     UserChangeHandlerJob.perform_later @user.email, @audit.id
-      #   end
-      #   puts ActionMailer::Base.deliveries.count
-      # }.to change {
-      #   ActionMailer::Base.deliveries.count
-      # }.by(1)
   
       response(200, 'successful') do
         schema type: :object,
@@ -200,34 +173,6 @@ RSpec.describe 'users', type: :request do
           }
         } }
   
-        describe 'with audit' do
-          before do |example|
-            expect(users(:one).audits.count).to equal(0)
-            submit_request(example.metadata)
-          end
-        
-          it 'archives the user' do |example|
-            assert_response_matches_metadata(example.metadata)
-            expect(users(:one).audits.count).to equal(1)
-          end
-        end
-
-        describe 'with email_job' do
-          before do |example|
-            ActiveJob::Base.queue_adapter = :test
-            submit_request(example.metadata)
-          end
-        
-          it 'archives the user' do |example|
-            assert_response_matches_metadata(example.metadata)
-            expect(enqueued_jobs.size).to eq(1)
-            expect {
-              perform_enqueued_jobs
-            }.to change {
-              ActionMailer::Base.deliveries.count
-            }.by(1)
-          end  
-        end
       end
    
       response(401, 'Unauthorized') do
