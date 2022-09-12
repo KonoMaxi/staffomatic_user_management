@@ -1,0 +1,320 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/authentications":
+    post:
+      summary: create authentication
+      parameters:
+      - name: credentials
+        in: query
+        schema:
+          type: object
+          properties:
+            authentication:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+          required:
+          - authentication
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                  user_email:
+                    type: string
+                  token:
+                    type: string
+                required:
+                - user_id
+                - user_email
+                - token
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/basic_error"
+  "/signup":
+    post:
+      summary: create signup
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                data:
+                  "$ref": "#/components/schemas/user"
+        '422':
+          description: unprocessable
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/jsonapi_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    type:
+                      type: string
+                      enum:
+                      - user
+                    attributes:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        password:
+                          type: string
+                        password_confirmation:
+                          type: string
+                      required:
+                      - email
+                      - password
+                      - password_confirmation
+                  required:
+                  - attributes
+  "/users":
+    get:
+      summary: list users
+      parameters:
+      - name: filter
+        in: query
+        schema:
+          type: object
+          properties:
+            filter:
+              type: object
+              properties:
+                archived_eq:
+                  type: boolean
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/user"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/login_prompt"
+  "/users/{id}":
+    delete:
+      summary: destroy user
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                      id:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/login_prompt"
+        '403':
+          description: Forbidden Self-Deletion
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/jsonapi_error"
+        '404':
+          description: User Not Found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/user"
+  "/users/{id}/archive":
+    patch:
+      summary: update users archive-status
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                data:
+                  "$ref": "#/components/schemas/user"
+        '401':
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/login_prompt"
+        '403':
+          description: Forbidden Self-Archiving
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/jsonapi_error"
+        '404':
+          description: User Not Found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/jsonapi_error"
+        '422':
+          description: Already archived
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/jsonapi_error"
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    attributes:
+                      type: object
+                      properties:
+                        archived:
+                          type: boolean
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: 127.0.0.1:3189
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authentication
+      description: Bearer token
+      in: header
+  schemas:
+    basic_error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    jsonapi_error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+                nullable: true
+              source:
+                type: object
+                nullable: true
+                properties:
+                  pointer:
+                    type: string
+              title:
+                type: string
+                nullable: true
+              detail:
+                type: string
+                nullable: true
+              code:
+                type: string
+                nullable: true
+      required:
+      - errors
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - user
+        attributes:
+          type: object
+          properties:
+            email:
+              type: string
+          required:
+          - email
+      required:
+      - attributes
+    login_prompt:
+      type: object
+      properties:
+        message:
+          type: string
+          enum:
+          - Please log in

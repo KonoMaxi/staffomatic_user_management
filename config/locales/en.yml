@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  user_modified_mailer:
+    send_notification:
+      subject: "Your account was modified"

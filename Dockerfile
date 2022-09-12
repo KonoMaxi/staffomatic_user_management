@@ -5,7 +5,8 @@ RUN apk update \
     && apk add --update --no-cache \
     build-base curl-dev git \
     yaml-dev zlib-dev nodejs yarn mariadb-dev \
-    tzdata bash
+    tzdata bash \
+    shared-mime-info
 
 RUN gem install bundler -v 2.1.4
 

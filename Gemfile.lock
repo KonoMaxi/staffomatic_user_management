@@ -60,20 +60,32 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
+    audited (5.0.2)
+      activerecord (>= 5.0, < 7.1)
     bcrypt (3.1.16)
     bootsnap (1.7.0)
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
     concurrent-ruby (1.1.8)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     diff-lcs (1.4.4)
     erubi (1.10.0)
     ffi (1.14.2)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    hashdiff (1.0.1)
+    httparty (0.20.0)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
     i18n (1.8.8)
       concurrent-ruby (~> 1.0)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     jsonapi-serializer (2.1.0)
       activesupport (>= 4.2)
     jsonapi.rb (1.6.0)
@@ -92,18 +104,27 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (1.0.0)
-    mimemagic (0.3.5)
+    mime-types (3.4.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2022.0105)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
     minitest (5.14.3)
     msgpack (1.4.2)
+    multi_xml (0.6.0)
     mysql2 (0.5.3)
     nio4r (2.5.4)
     nokogiri (1.11.1)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
+    public_suffix (5.0.0)
     puma (5.2.0)
       nio4r (~> 2.0)
+    pundit (2.2.0)
+      activesupport (>= 3.0.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-test (1.1.0)
@@ -142,6 +163,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rexml (3.2.5)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
     rspec-expectations (3.10.1)
@@ -159,6 +181,15 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
+    rswag-api (2.6.0)
+      railties (>= 3.1, < 7.1)
+    rswag-specs (2.6.0)
+      activesupport (>= 3.1, < 7.1)
+      json-schema (~> 2.2)
+      railties (>= 3.1, < 7.1)
+    rswag-ui (2.6.0)
+      actionpack (>= 3.1, < 7.1)
+      railties (>= 3.1, < 7.1)
     spring (2.1.1)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -170,6 +201,10 @@ GEM
     thor (1.1.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    webmock (3.18.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -179,18 +214,26 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  audited (~> 5.0)
   bcrypt
   bootsnap (>= 1.4.4)
   byebug
+  httparty
   jsonapi.rb
   jwt
   listen (~> 3.3)
   mysql2 (~> 0.5)
   puma (~> 5.0)
+  pundit
   rails (~> 6.1.1)
+  ransack
   rspec-rails (~> 4.0.2)
+  rswag-api
+  rswag-specs
+  rswag-ui
   spring
   tzinfo-data
+  webmock
 
 RUBY VERSION
    ruby 2.6.6p146

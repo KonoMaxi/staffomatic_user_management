@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resource :signup, only: %i[create]
-  resources :authentications, only: %i[create]
-  resources :users, only: %i[index]
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+
+  resource :signup, only: [ :create ]
+  resources :authentications, only: [ :create ]
+  resources :users, only: [ :index, :destroy ] do
+    patch :archive, on: :member
+  end
 end

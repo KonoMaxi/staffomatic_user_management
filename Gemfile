@@ -19,14 +19,32 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # implement auth with JWT
 gem 'jwt'
 
+# implement authorization
+gem 'pundit'
+
 # seriaization & json_api logic
 gem 'jsonapi.rb'
 
+# filtering & sorting
+gem 'ransack'
+
+gem 'rswag-api'
+gem 'rswag-ui'
+
+# Httparty hard!
+gem 'httparty'
+
+# hange audits
+gem "audited", "~> 5.0"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 4.0.2'
+  gem 'rswag-specs'
+
+  # Mock webhook
+  gem "webmock"
 end
 
 group :development do

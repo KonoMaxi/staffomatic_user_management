@@ -1,19 +1,53 @@
 require 'rails_helper'
 
-RSpec.describe 'Users', type: :request do
-  let(:user) do
-    User.create(
-      email: 'danie@example.com',
-      password: 'supersecurepassword',
-      password_confirmation: 'supersecurepassword',
-    )
+RSpec.describe "Users", type: :request do
+
+  fixtures :users
+
+  describe "enqueues mails" do
+    it 'for destroyed' do
+      expect {
+        delete user_path(users(:two)), headers: { "Authentication": 'Bearer ' + generate_token(users(:one)) }
+      }.to have_enqueued_mail(UserModifiedMailer, :send_notification)
+    end
+
+    it 'for updated' do
+      expect {
+        patch archive_user_path(users(:two)),
+          params: {
+            id: users(:one).id,
+            type: "user",
+            data: {
+              attributes: {
+                archived: true
+              }
+            }
+          }, headers: { "Authentication": 'Bearer ' + generate_token(users(:one)) }
+      }.to have_enqueued_mail(UserModifiedMailer, :send_notification)
+    end
   end
 
-  describe 'GET /index' do
-    it 'returns http success' do
-      auth_token = authenticate_user(user)
-      get users_path, headers: { 'Authentication' => "Bearer #{auth_token}" }
-      expect(response).to have_http_status(:success)
+  describe "enqueues webhook jobs" do
+    it 'for destroyed' do
+      expect {
+        delete user_path(users(:two)), headers: { "Authentication": 'Bearer ' + generate_token(users(:one)) }
+      }.to have_enqueued_job(UserChangedWebhookJob)
+    end
+
+    it 'for updated' do
+      expect {
+        patch archive_user_path(users(:two)),
+          params: {
+            id: users(:one).id,
+            type: "user",
+            data: {
+              attributes: {
+                archived: true
+              }
+            }
+          }, headers: { "Authentication": 'Bearer ' + generate_token(users(:one)) }
+      }.to have_enqueued_job(UserChangedWebhookJob)
+
     end
   end
 end
