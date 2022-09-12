@@ -191,7 +191,7 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
+          type: string
       security:
       - Bearer: []
       responses:

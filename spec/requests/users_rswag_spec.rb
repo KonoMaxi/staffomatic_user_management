@@ -172,7 +172,18 @@ RSpec.describe 'users', type: :request do
             }
           }
         } }
-  
+
+        describe 'with audit' do
+          before do |example|
+            expect(users(:one).audits.count).to equal(0)
+            submit_request(example.metadata)
+          end
+        
+          it 'archives the user' do |example|
+            assert_response_matches_metadata(example.metadata)
+            expect(users(:one).audits.count).to equal(1)
+          end
+        end
       end
    
       response(401, 'Unauthorized') do
