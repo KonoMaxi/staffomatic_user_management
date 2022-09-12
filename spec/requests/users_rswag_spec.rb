@@ -86,7 +86,15 @@ RSpec.describe 'users', type: :request do
         let ('Authentication') { 'Bearer ' + generate_token(users(:one)) }
         let ('id') { users(:two).id }
 
-        run_test!
+        before do |example|
+          expect(users(:two).audits.count).to equal(0)
+          submit_request(example.metadata)
+        end
+      
+        it 'destroys the user with audit' do |example|
+          assert_response_matches_metadata(example.metadata)
+          expect(users(:two).audits.count).to equal(1)
+        end
       end
 
       response(401, 'Unauthorized') do
@@ -163,7 +171,15 @@ RSpec.describe 'users', type: :request do
           }
         } }
   
-        run_test!
+        before do |example|
+          expect(users(:two).audits.count).to equal(0)
+          submit_request(example.metadata)
+        end
+      
+        it 'archives the user with audit' do |example|
+          assert_response_matches_metadata(example.metadata)
+          expect(users(:two).audits.count).to equal(1)
+        end
       end
    
       response(401, 'Unauthorized') do
