@@ -87,13 +87,13 @@ RSpec.describe 'users', type: :request do
         let ('id') { users(:two).id }
 
         before do |example|
-          expect(users(:two).audits.count).to equal(0)
+          expect(Audited::Audit.count).to equal(0)
           submit_request(example.metadata)
         end
       
         it 'destroys the user with audit' do |example|
           assert_response_matches_metadata(example.metadata)
-          expect(users(:two).audits.count).to equal(1)
+          expect(Audited::Audit.count).to equal(1)
         end
       end
 
@@ -133,7 +133,7 @@ RSpec.describe 'users', type: :request do
 
   path '/users/{id}/archive' do
     patch('update users archive-status') do
-      parameter name: :id, in: :path, type: :integer
+      parameter name: :id, in: :path, type: :string
       parameter name: :status, in: :body, schema: {
         type: :object,
         properties: {
@@ -162,7 +162,7 @@ RSpec.describe 'users', type: :request do
         let ('Authentication') { 'Bearer ' + generate_token(users(:two)) }
         let ('id') { users(:one).id }
         let ('status') { {
-          id: users(:two).id,
+          id: users(:one).id,
           type: "user",
           data: {
             attributes: {
@@ -172,13 +172,13 @@ RSpec.describe 'users', type: :request do
         } }
   
         before do |example|
-          expect(users(:two).audits.count).to equal(0)
+          expect(users(:one).audits.count).to equal(0)
           submit_request(example.metadata)
         end
       
         it 'archives the user with audit' do |example|
           assert_response_matches_metadata(example.metadata)
-          expect(users(:two).audits.count).to equal(1)
+          expect(users(:one).audits.count).to equal(1)
         end
       end
    

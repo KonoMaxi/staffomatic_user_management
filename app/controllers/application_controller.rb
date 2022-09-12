@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 
   def current_user
     user_id = JwtAuthenticationService.decode_token(request)
-    @user = User.find_by(id: user_id)
+    User.find_by(id: user_id)
   end
 
   def logged_in?

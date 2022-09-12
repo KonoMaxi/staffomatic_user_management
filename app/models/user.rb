@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  audited only: :archived, on: [:update, :destroy]
   has_secure_password
 
   validates :email,

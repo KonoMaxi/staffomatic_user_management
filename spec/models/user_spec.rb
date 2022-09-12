@@ -28,7 +28,7 @@ RSpec.describe User, type: :model do
   it 'generates an audit entry on archive' do
     user = users(:one)
     expect(user.audits.count).to equal(0)
-    user.update(archive: true)
+    user.update(archived: true)
     expect(user.audits.count).to equal(1)
   end
 
